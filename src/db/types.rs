@@ -1,12 +1,12 @@
 use sqlx::{FromRow, Type};
 
-#[derive(Type, Debug)]
+#[derive(Type, Debug, Default)]
 #[sqlx(transparent)]
-pub struct UserId(u32);
+pub struct UserId(pub u32);
 
-#[derive(Type, Debug)]
+#[derive(Type, Debug, Default)]
 #[sqlx(transparent)]
-pub struct UserVocaDBId(u32);
+pub struct UserVocaDBId(pub u32);
 
 #[derive(Type, Debug)]
 pub enum UserRole {
@@ -16,7 +16,19 @@ pub enum UserRole {
     Admin,
 }
 
-#[derive(FromRow, Debug)]
+impl Default for UserRole {
+    fn default() -> Self {
+        Self::Default
+    }
+}
+
+pub struct NewUser {
+    pub name: String,
+    pub role: UserRole,
+    pub vocadb_id: UserVocaDBId,
+}
+
+#[derive(FromRow, Debug, Default)]
 #[sqlx(rename_all = "camelCase")]
 pub struct User {
     id: UserId,
